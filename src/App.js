@@ -3,14 +3,15 @@ import Navbar from "./routes/navbar/navbar.component";
 import Home from "./routes/home/home.component";
 import SignIn from "./components/sign-in/sign-in.component";
 import SignUp from "./components/sign-up/sign-up.component";
+import Authentication from "./routes/authentication/authentication.component";
 
 const App = ()=>{
   return(
       <Routes>
         <Route path="/" element={<Navbar/>}>
           <Route index element={<Home/>}/>
-          <Route path="sign-in" element={<SignIn/>}/>
-          <Route path="sign-up" element={<SignUp/>}/>
+          <Route path="auth" element={<Authentication/>}/>
+          <Route path="y" element={<div>Algo que cambie y</div>}/>
           <Route path="z" element={<div>Algo que cambie z</div>}/>
         </Route>
       </Routes>

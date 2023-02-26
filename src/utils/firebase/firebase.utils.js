@@ -24,20 +24,14 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 
 //These functions return a promise that resolves to the signed in user and the provider creds
-export const signInWithGooglePopup = ()=>signInWithPopup(auth, googleProvider);
+export const signInAuthWithGooglePopup = ()=>signInWithPopup(auth, googleProvider);
 //In the case of signInWithRedirect it is important to remember that redirecting will cause
 //that the component where the function was called to unmount restarting the state if not handled correctly
-export const signInWithGoogleRedirect = ()=>signInWithRedirect(auth, googleProvider);
+export const signInAuthWithGoogleRedirect = ()=>signInWithRedirect(auth, googleProvider);
 
-export const signUpWithEmailAndPassword = async(email, password)=>{
-    const {user} = await createUserWithEmailAndPassword(auth, email, password);
-    return user;
-};
+export const signUpAuthWithEmailAndPassword = (email, password)=>createUserWithEmailAndPassword(auth, email, password);
 
-export const signIn = async(email, password)=>{
-    const {user} = await signInWithEmailAndPassword(auth, email, password);
-    return user;
-};
+export const signInAuthWithEmailAndPassword = (email, password)=>signInWithEmailAndPassword(auth, email, password);
 
 export const db = getFirestore();
 
@@ -59,9 +53,3 @@ export const createUserDocFromAuth = async(user, additionalInfo={})=>{
         return `Error creating the user:${error.code}`;
     }
 };
-
-// export const signInWithGooglePopup = async ()=>{
-//     const user = await signInWithPopup(auth, provider);
-//     console.log(user);
-//     return user
-// };

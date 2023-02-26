@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signUpWithEmailAndPassword, createUserDocFromAuth } from "../../utils/firebase/firebase.utils";
+import { signUpAuthWithEmailAndPassword, createUserDocFromAuth } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component"
 import "./sign-up.styles.scss"
@@ -15,13 +15,13 @@ const SignUp = ()=>{
     
     const resetFormFields = ()=>{setFormFields(defaultFormFields);};
 
-    const submitForm = async (event)=>{
+    const signUpWithEmailAndPassword = async (event)=>{
         //Se utiliza event.preventDefault porque por defecto el proceso de hacer submit a una form recarga la pagina
         event.preventDefault();
-        // const {email, password} = formFields;
-        const user = await signUpWithEmailAndPassword(email, password);
-        createUserDocFromAuth(user, {displayName:email});
+        const {user} = await signUpAuthWithEmailAndPassword(email, password);
+        const result = await createUserDocFromAuth(user, {displayName:email});
         resetFormFields();
+        console.log(result)
     };
 
 
@@ -41,7 +41,7 @@ const SignUp = ()=>{
         <div className="sign-up-container">
             <h2>Don´t have an account yet?</h2>
             <span>Sign up with your email and password</span>
-            <form  onSubmit={submitForm}>
+            <form  onSubmit={signUpWithEmailAndPassword}>
                 <FormInput label="Email address" type="email" onChange={changeInput} name="email" value={email} required/>
                 <FormInput label="Password" type="password" onChange={changeInput} name="password" value={password} required/>
                 <Button children="Sign up" type="submit"/>
