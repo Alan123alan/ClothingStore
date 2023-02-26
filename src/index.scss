@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+// The * match selector means the following styling will apply to all html elements
+// Setting box sizing to border-box makes it so that padding and border don´t throw off the width and height
+
+*{
+  box-sizing: border-box;
+}
