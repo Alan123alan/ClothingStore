@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app";
-import {getAuth, createUserWithEmailAndPassword, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword ,GoogleAuthProvider} from "firebase/auth"
+import {GoogleAuthProvider, getAuth, createUserWithEmailAndPassword, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth"
 import {getFirestore, doc, getDoc, setDoc} from "firebase/firestore"
 
 // Your web app's Firebase configuration
@@ -32,6 +32,10 @@ export const signInAuthWithGoogleRedirect = ()=>signInWithRedirect(auth, googleP
 export const signUpAuthWithEmailAndPassword = (email, password)=>createUserWithEmailAndPassword(auth, email, password);
 
 export const signInAuthWithEmailAndPassword = (email, password)=>signInWithEmailAndPassword(auth, email, password);
+
+export const signOutUser = ()=>signOut(auth);
+
+export const onAuthStateChangedListener = (callback)=>onAuthStateChanged(auth, callback);
 
 export const db = getFirestore();
 

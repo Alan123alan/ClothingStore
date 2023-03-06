@@ -24,17 +24,13 @@ const SignIn = ()=>{
     };
 
     const signInWithGoogle = async()=>{
-        const {user} = await signInAuthWithGooglePopup();
-        const result = await createUserDocFromAuth(user);
-        console.log(result);
+        await signInAuthWithGooglePopup();
     }
 
     const signInWithEmailAndPassword = async(event)=>{
         event.preventDefault();
-        const {user} = await signInAuthWithEmailAndPassword(email, password);
-        const result = await createUserDocFromAuth(user, {displayName:email});
+        await signInAuthWithEmailAndPassword(email, password);
         resetFormFields();
-        console.log(result);
     }
     
     return(
