@@ -13,12 +13,7 @@ const App = ()=>{
         <Route path="/" element={<Navbar/>}>
           <Route index element={<Home/>}/>
           <Route path="auth" element={<Authentication/>}/>
-          <Route path="hats" element={<Shop/>}/>
-          <Route path="jackets" element={<Shop/>}/>
-          <Route path="sneakers" element={<Shop/>}/>
-          <Route path="men" element={<Shop/>}/>
-          <Route path="women" element={<Shop/>}/>
-          <Route path="shop" element={<Shop/>}/>
+          <Route path="shop/*" element={<Shop/>}/>
           <Route path="checkout" element={<Checkout/>}/>
           <Route path="y" element={<div>Algo que cambie y</div>}/>
           <Route path="z" element={<div>Algo que cambie z</div>}/>

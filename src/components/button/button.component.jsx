@@ -1,13 +1,17 @@
-import "./button.styles.scss"
+import {BaseButton, GoogleSignInButton, InvertedButton, CartDropdownButton, ProductCardButton} from "./button.styles.jsx"
 /*Website has three button stylings: default, inverted and google-sign-in*/
 
 const BUTTON_STYLE_CLASSES = {
-    inverted : "inverted",
-    google : "google-sign-in"
+    "base" : BaseButton,
+    "google" : GoogleSignInButton,
+    "inverted" : InvertedButton,
+    "cart" : CartDropdownButton,
+    "card" : ProductCardButton
 }
 
 const Button = ({children, style, ...otherProps})=>{
-    return <button className={`button-container ${BUTTON_STYLE_CLASSES[style]}`} {...otherProps} >{children}</button>
+    const CustomButton = !style?BaseButton:BUTTON_STYLE_CLASSES[style];
+    return <CustomButton {...otherProps}>{children}</CustomButton>
 };
 
 

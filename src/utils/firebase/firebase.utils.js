@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app";
 import {GoogleAuthProvider, getAuth, createUserWithEmailAndPassword, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth"
-import {getFirestore, doc, getDoc, setDoc} from "firebase/firestore"
+import {getFirestore, doc, getDoc, getDocs, setDoc, collection, writeBatch, query, where} from "firebase/firestore"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -39,6 +39,16 @@ export const onAuthStateChangedListener = (callback)=>onAuthStateChanged(auth, c
 
 export const db = getFirestore();
 
+export const createCollectionAndDocuments = async(collectionKey, objectsToAdd)=>{
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+    objectsToAdd.forEach(object => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);        
+    });;
+    await batch.commit()
+};
+
 export const createUserDocFromAuth = async(user, additionalInfo={})=>{
     const documentRef = doc(db, "users", user.uid);
     const userSnapshot = await getDoc(documentRef);
@@ -57,3 +67,22 @@ export const createUserDocFromAuth = async(user, additionalInfo={})=>{
         return `Error creating the user:${error.code}`;
     }
 };
+
+export const getCategoriesAndItems = async()=>{
+    const categoriesQuery = query(collection(db, "categories"));
+    const categoriesSnapshot = await getDocs(categoriesQuery);
+    console.log(categoriesSnapshot);
+    const categoriesAndItemsMap = categoriesSnapshot.docs.reduce((DocsMap, doc)=>{
+        DocsMap[doc.data().title]=doc.data().items;
+        return DocsMap
+    }, {});
+    console.log(categoriesAndItemsMap);
+    return categoriesAndItemsMap
+    // console.log(categoriesMap);
+    // console.log(categoriesMap.get("Hats"));
+    // console.log(categoriesMap.get("Sneakers"));
+    // querySnapshot.forEach((category)=>{
+    //     console.log("Entre");
+    //     console.log(category.id, category.data());
+    // });
+}
