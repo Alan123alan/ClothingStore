@@ -1,5 +1,5 @@
 // import PRODUCTS from "../shop-data"
-import SHOP_DATA from "../shop-data";
+// import SHOP_DATA from "../shop-data";
 import { createContext, useEffect, useState } from "react";
 import { getCategoriesAndItems } from "../utils/firebase/firebase.utils";
 
@@ -13,7 +13,7 @@ export const ProductsProvider = ({children})=>{
     const [products, setProducts] = useState({});
     useEffect(()=>{
         const getProducts = async()=>{
-            const categoriesAndDocuments = await getCategoriesAndItems();
+            const categoriesAndDocuments = await getCategoriesAndItemss();
             setProducts(categoriesAndDocuments);
         };
         getProducts();
