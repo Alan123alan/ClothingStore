@@ -13,7 +13,7 @@ export const ProductsProvider = ({children})=>{
     const [products, setProducts] = useState({});
     useEffect(()=>{
         const getProducts = async()=>{
-            const categoriesAndDocuments = await getCategoriesAndItemss();
+            const categoriesAndDocuments = await getCategoriesAndItems();
             setProducts(categoriesAndDocuments);
         };
         getProducts();
