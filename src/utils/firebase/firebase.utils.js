@@ -37,6 +37,15 @@ export const signOutUser = ()=>signOut(auth);
 
 export const onAuthStateChangedListener = (callback)=>onAuthStateChanged(auth, callback);
 
+export const getCurrentUser = ()=>{
+    return new Promise((resolve, reject)=>{
+        const unsuscribe = onAuthStateChanged(auth,(user)=>{
+            unsuscribe();
+            resolve(user);  
+        }, reject);
+    })
+}
+
 export const db = getFirestore();
 
 export const createCollectionAndDocuments = async(collectionKey, objectsToAdd)=>{
@@ -78,11 +87,4 @@ export const getCategoriesAndItems = async()=>{
     }, {});
     console.log(categoriesAndItemsMap);
     return categoriesAndItemsMap
-    // console.log(categoriesMap);
-    // console.log(categoriesMap.get("Hats"));
-    // console.log(categoriesMap.get("Sneakers"));
-    // querySnapshot.forEach((category)=>{
-    //     console.log("Entre");
-    //     console.log(category.id, category.data());
-    // });
 }

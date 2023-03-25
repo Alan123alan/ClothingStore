@@ -1,69 +1,80 @@
-import { Fragment, useContext } from "react";
-import { Routes, Route, useParams, useNavigate } from "react-router";
-import { ProductsContext } from "../../contexts/products.context";
-import { CartContext } from "../../contexts/cart.context";
-// import ProductCard from "../../components/product-card/product-card.component";
+import { Fragment, useEffect } from "react";
+import { useParams, useNavigate } from "react-router";
+import { useDispatch , useSelector} from "react-redux";
+import { addProductToCart } from "../../store/cart.reducer";
+import { getCategoriesAndItems } from "../../utils/firebase/firebase.utils";
 import Button from "../../components/button/button.component";
+import Spinner from "../../components/spinner/spinner.component";
+import { productsSelector, setProducts } from "../../store/products.reducer";
 import {ProductCardContainer, ProductCardImage, ProductCardFooter, ProductCardName, ProductCardPrice, ProductsContainer} from "./shop.styles.jsx"
-// import {ProductCardButton} from "../../components/button/button.styles"
 
 
-const Shop = ()=>{
-    return (
-        <Routes>
-            <Route index element={<ShopSectionsPreview/>}/>
-            <Route path=":section" element={<ShopSection/>}/>
-        </Routes>
-    )
-};
-
-
-const ShopSectionsPreview = ()=>{
-    const products = useContext(ProductsContext);
-    return (
-        <Fragment>
-            {Object.keys(products).map(title=><ShopSectionPreview key={title} section={title}/>)}
-        </Fragment>
-    )
-};
-
-
-const ShopSectionPreview = ({section})=>{
-    const products = useContext(ProductsContext);
+export const ShopSectionsPreview = ()=>{
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        const getProducts = async()=>{
+            const products = await getCategoriesAndItems();
+            dispatch(setProducts(products));
+        };
+        getProducts();
+    }, []);
+    const products = useSelector(productsSelector);
     const navigate = useNavigate();
-    const navigateToShopSection = ()=>{
+    const navigateToShopSection = (section)=>{
         navigate(section);
     };
     return (
         <Fragment>
-            <h2><span onClick={navigateToShopSection}>{section}</span></h2>
-            <ProductsContainer>
-                {products[section].map(product=><ProductCard key={product.id} product={product}/>)}
-            </ProductsContainer>
+            {Object.keys(products).map(section=>(
+                <Fragment key={section}>
+                    <h2><span onClick={()=>{navigateToShopSection(section)}}>{section}</span></h2>
+                    <ProductsContainer>
+                        {products[section].map(product=><ProductCard key={product.id} product={product}/>)}
+                    </ProductsContainer>
+                </Fragment>
+            ))}
         </Fragment>
     )
 };
 
 
-const ShopSection = ()=>{
-    const products = useContext(ProductsContext);
+export const ShopSection = ()=>{    
+    console.log("Rendered ShopSection component");
     const {section} = useParams();
-    return (
-        <Fragment key={section}>
-            <h2><span>{section}</span></h2>
-            <ProductsContainer>
-                {products[section].map(product=><ProductCard key={product.id} product={product}/>)}
-            </ProductsContainer>
-        </Fragment>
-    )
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        const getProducts = async()=>{
+            const products = await getCategoriesAndItems();
+            dispatch(setProducts(products));
+        };
+        getProducts();
+    },[]);
+    const products = useSelector(productsSelector);
+    console.log(products)
+    console.log(products[section])
+    // const isLoading = useSelector(isLoadingSelector);
+
+    // if(products[section] !== undefined){
+        // products[section].map(product=>console.log(product))
+        return products[section] === undefined ? <Spinner/> :
+        (
+            <Fragment>
+                <h2><span>{section}</span></h2>
+                <ProductsContainer>
+                    {products[section].map(product=><ProductCard key={product.id} product={product}/>)}
+                </ProductsContainer>
+            </Fragment>
+        )
+    // }
 };
 
 
 const ProductCard = ({product})=>{
-    const {addProductToCart} = useContext(CartContext);
+    const cartItems = useSelector(state=>state.cartReducer.cartItems)
     const {name, price, imageUrl} = product;
+    const dispatch = useDispatch();
     function addProductToCartHandler(){
-        addProductToCart(product);
+        dispatch(addProductToCart(product, cartItems));
     }
     return (
         <ProductCardContainer>
@@ -76,8 +87,3 @@ const ProductCard = ({product})=>{
         </ProductCardContainer>
     )
 };
-
-
-
-
-export default Shop;

@@ -1,22 +1,18 @@
-// import {ReactComponent as Logo} from "../../assets/zarape.svg";
-// import {ReactComponent as ShoppingBagIcon} from "../../assets/shopping-bag.svg";
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { signOutUser } from "../../utils/firebase/firebase.utils";
-// import ShoppingBag from "../../components/shopping-bag/shopping-bag.component";
-// import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
-import { UserContext } from "../../contexts/user.context";
-import { CartContext } from "../../contexts/cart.context";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleCart } from "../../store/cart.reducer";
 import Button from "../../components/button/button.component";
-// import {CartDropdownButton} from "../../components/button/button.styles"
 import {NavbarContainer, NavbarLinksContainer, NavbarLink,  NavbarLogoContainer, NavbarLogo,
         ShoppingBagContainer, ShoppingBagIcon, ShoppingBagItemsContainer,
         CartDropdownContainer, EmptyMessageContainer, CartItemsContainer, 
         CartItemContainer, CartItemDetailsContainer, CartItemImage, CartItemName, CartIemPrice} from "./navbar.styles.jsx"
 
 const Navbar = ()=>{
-    const {currentUser} = useContext(UserContext);
-    const {isCartOpen} = useContext(CartContext);
+    const currentUser = useSelector((state)=>state.userReducer.currentUser);
+    const isCartOpen = useSelector((state=>state.cartReducer.isCartOpen));
+    console.log(isCartOpen)
     return(
         <Fragment>
             <NavbarContainer>
@@ -39,20 +35,21 @@ const Navbar = ()=>{
 };
 
 const ShoppingBag = ()=>{
-    const {cartItems, isCartOpen, toggleCart} = useContext(CartContext);
+    const cartItemsCount = useSelector((state=>state.cartReducer.cartItemsCount));
+    const dispatch = useDispatch();
     function toggleCartHandler(){
-        toggleCart(isCartOpen);
+        dispatch(toggleCart());
     }
     return(
         <ShoppingBagContainer onClick={toggleCartHandler}>
             <ShoppingBagIcon/>
-            <ShoppingBagItemsContainer>{cartItems.reduce((total, cartItem)=>total+cartItem.quantity,0)}</ShoppingBagItemsContainer>
+            <ShoppingBagItemsContainer>{cartItemsCount}</ShoppingBagItemsContainer>
         </ShoppingBagContainer>    
     )
 };
 
 const CartDropdown = ()=>{
-    const {cartItems} = useContext(CartContext);
+    const cartItems = useSelector(state=>state.cartReducer.cartItems);
     const navigate = useNavigate();
     const navigateToCheckout = ()=>{navigate("/checkout");};
     return(
